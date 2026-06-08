@@ -276,28 +276,77 @@ export default function Home() {
     });
   }, []);
 
-  return (
-    <div className="min-h-screen bg-[var(--background)]">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#2D7D7B]/8 via-[#FAF7F2] to-[#D4A574]/10" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A574]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#2D7D7B]/8 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+  const isAuthView = !initialAuthLoading && !currentUser;
 
-        <div className="relative max-w-4xl mx-auto px-6 pt-20 pb-16">
+  return (
+    <div
+      className={
+        isAuthView
+          ? "min-h-screen bg-[#070A13] text-white"
+          : "min-h-screen bg-[var(--background)]"
+      }
+    >
+      {/* Hero Section */}
+      <section
+        className={
+          isAuthView
+            ? "relative min-h-screen overflow-hidden"
+            : "relative overflow-hidden"
+        }
+      >
+        {/* Background decoration */}
+        {isAuthView ? (
+          <>
+            <div className="absolute inset-0 bg-[linear-gradient(135deg,#070A13_0%,#0B1D2A_38%,#17122C_70%,#2A1C0B_100%)]" />
+            <div className="absolute inset-0 opacity-35 [background-image:linear-gradient(rgba(74,222,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(212,165,116,0.14)_1px,transparent_1px)] [background-size:42px_42px]" />
+            <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_0%,rgba(74,222,255,0.18)_26%,transparent_48%,rgba(212,165,116,0.14)_72%,transparent_100%)]" />
+            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/80 to-transparent" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#2D7D7B]/8 via-[#FAF7F2] to-[#D4A574]/10" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A574]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#2D7D7B]/8 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+          </>
+        )}
+
+        <div
+          className={
+            isAuthView
+              ? "relative max-w-4xl mx-auto px-6 pt-20 pb-16"
+              : "relative max-w-4xl mx-auto px-6 pt-20 pb-16"
+          }
+        >
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-[#2D7D7B]/10 text-[#2D7D7B] px-4 py-1.5 rounded-full text-sm font-medium mb-6">
+            <div
+              className={
+                isAuthView
+                  ? "inline-flex items-center gap-2 border border-cyan-300/30 bg-cyan-300/10 text-cyan-100 px-4 py-1.5 rounded-full text-sm font-medium mb-6 shadow-[0_0_24px_rgba(74,222,255,0.18)]"
+                  : "inline-flex items-center gap-2 bg-[#2D7D7B]/10 text-[#2D7D7B] px-4 py-1.5 rounded-full text-sm font-medium mb-6"
+              }
+            >
               <Compass className="w-4 h-4" />
               AI 智能旅行顾问
             </div>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#D4A574] mb-4 leading-tight">
+            <h1
+              className={
+                isAuthView
+                  ? "font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-white to-[#D4A574] mb-4 leading-tight"
+                  : "font-serif text-4xl md:text-5xl font-bold text-[#D4A574] mb-4 leading-tight"
+              }
+            >
               你的下一段旅程
               <br />
               <span>从这里开始</span>
             </h1>
-            <p className="text-[#6B6B6B] text-lg max-w-xl mx-auto leading-relaxed">
+            <p
+              className={
+                isAuthView
+                  ? "text-slate-300 text-lg max-w-xl mx-auto leading-relaxed"
+                  : "text-[#6B6B6B] text-lg max-w-xl mx-auto leading-relaxed"
+              }
+            >
               输入目的地和旅行时间，AI
               为你量身定制旅行攻略与行李清单，让每一次出发都从容不迫
             </p>
@@ -311,29 +360,31 @@ export default function Home() {
               </CardContent>
             </Card>
           ) : !currentUser ? (
-            <Card className="max-w-md mx-auto border-[#E5DDD3]/60 shadow-lg shadow-[#2D7D7B]/5 bg-white/80 backdrop-blur-sm">
+            <Card className="max-w-md mx-auto border-cyan-300/20 shadow-2xl shadow-cyan-500/10 bg-slate-950/70 text-white backdrop-blur-xl">
               <CardHeader>
-                <CardTitle className="font-serif text-[#2C2C2C] flex items-center gap-2">
-                  <UserRound className="w-5 h-5 text-[#2D7D7B]" />
+                <CardTitle className="font-serif text-white flex items-center gap-2">
+                  <UserRound className="w-5 h-5 text-cyan-200" />
                   {authMode === "login" ? "登录账号" : "注册账号"}
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-5">
                 <div className="space-y-2">
-                  <Label htmlFor="authUsername">用户名</Label>
+                  <Label htmlFor="authUsername" className="text-slate-200">
+                    用户名
+                  </Label>
                   <Input
                     id="authUsername"
                     placeholder="3-30 位字母、数字或下划线"
                     value={authUsername}
                     onChange={(e) => setAuthUsername(e.target.value)}
                     disabled={authLoading}
-                    className="h-11 bg-white"
+                    className="h-11 border-cyan-300/20 bg-white/10 text-white placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label
                     htmlFor="authPassword"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 text-slate-200"
                   >
                     <KeyRound className="w-4 h-4 text-[#D4A574]" />
                     密码
@@ -350,11 +401,11 @@ export default function Home() {
                       }
                     }}
                     disabled={authLoading}
-                    className="h-11 bg-white"
+                    className="h-11 border-cyan-300/20 bg-white/10 text-white placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
                   />
                 </div>
                 {authError && (
-                  <div className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-md px-3 py-2">
+                  <div className="text-sm text-red-100 bg-red-500/15 border border-red-300/20 rounded-md px-3 py-2">
                     {authError}
                   </div>
                 )}
@@ -363,7 +414,7 @@ export default function Home() {
                   disabled={
                     authLoading || !authUsername.trim() || !authPassword
                   }
-                  className="h-11 bg-[#2D7D7B] hover:bg-[#256B69] text-white"
+                  className="h-11 bg-cyan-300 text-slate-950 hover:bg-cyan-200 shadow-[0_0_28px_rgba(103,232,249,0.22)]"
                 >
                   {authLoading && (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -377,7 +428,7 @@ export default function Home() {
                     setAuthMode(authMode === "login" ? "register" : "login");
                     setAuthError("");
                   }}
-                  className="text-[#2D7D7B]"
+                  className="text-cyan-200 hover:bg-white/10 hover:text-white"
                 >
                   {authMode === "login"
                     ? "没有账号？去注册"
