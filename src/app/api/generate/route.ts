@@ -5,44 +5,40 @@ import {
   updateTravelRecordResult,
 } from "@/storage/database/travel-records";
 
-interface ChatMessage {
-  role: "system" | "user" | "assistant";
-  content: string;
-}
-
-function getChatCompletionsUrl(): string {
-  const explicitUrl = process.env.COZE_CHAT_COMPLETIONS_URL;
-  if (explicitUrl) return explicitUrl;
-
-  const baseUrl =
-    process.env.COZE_MODEL_BASE_URL ?? process.env.COZE_BASE_URL;
-  if (!baseUrl) {
-    throw new Error("COZE_MODEL_BASE_URL or COZE_BASE_URL is not set");
-  }
-
-  return `${baseUrl.replace(/\/+$/, "")}/v1/chat/completions`;
+function getDashScopeResponsesUrl(): string {
+  return (
+    process.env.DASHSCOPE_RESPONSES_URL ??
+    "https://dashscope.aliyuncs.com/compatible-mode/v1/responses"
+  );
 }
 
 function extractContentFromChunk(value: unknown): string {
   if (!value || typeof value !== "object") return "";
 
   const data = value as {
+    type?: unknown;
+    delta?: unknown;
     choices?: Array<{
-      delta?: { content?: unknown };
+      delta?: { content?: unknown; reasoning_content?: unknown };
       message?: { content?: unknown };
       text?: unknown;
     }>;
     content?: unknown;
     output_text?: unknown;
+    response?: {
+      output_text?: unknown;
+    };
   };
 
   const choice = data.choices?.[0];
   const content =
+    (data.type === "response.output_text.delta" ? data.delta : undefined) ??
     choice?.delta?.content ??
     choice?.message?.content ??
     choice?.text ??
     data.content ??
-    data.output_text;
+    data.output_text ??
+    data.response?.output_text;
 
   return typeof content === "string" ? content : "";
 }
@@ -67,10 +63,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const apiKey = process.env.COZE_API_KEY;
+  const apiKey = process.env.DASHSCOPE_API_KEY;
   if (!apiKey) {
     return new Response(
-      JSON.stringify({ error: "COZE_API_KEY is not set" }),
+      JSON.stringify({ error: "DASHSCOPE_API_KEY is not set" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
@@ -126,13 +122,7 @@ export async function POST(request: NextRequest) {
 ### 💼 打包小技巧
 节省空间、防皱、收纳等实用建议`;
 
-  const messages: ChatMessage[] = [
-    { role: "system", content: systemPrompt },
-    {
-      role: "user",
-      content: `我要去${destination}旅行，旅行时间是${travelTime}。请为我生成详细的旅行攻略和行李建议。`,
-    },
-  ];
+  const userPrompt = `我要去${destination}旅行，旅行时间是${travelTime}。请为我生成详细的旅行攻略和行李建议。`;
 
   const encoder = new TextEncoder();
   let fullResult = "";
@@ -140,16 +130,16 @@ export async function POST(request: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        const llmResponse = await fetch(getChatCompletionsUrl(), {
+        const llmResponse = await fetch(getDashScopeResponsesUrl(), {
           method: "POST",
           headers: {
             Authorization: `Bearer ${apiKey}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            model:
-              process.env.COZE_LLM_MODEL ?? "doubao-seed-2-0-pro-260215",
-            messages,
+            model: process.env.DASHSCOPE_LLM_MODEL ?? "qwen3.7-plus",
+            instructions: systemPrompt,
+            input: userPrompt,
             temperature: 0.8,
             stream: true,
           }),
@@ -223,7 +213,7 @@ export async function POST(request: NextRequest) {
 
         if (!fullResult) {
           throw new Error(
-            "LLM returned an empty response. Please verify COZE_MODEL_BASE_URL, COZE_API_KEY, and COZE_LLM_MODEL."
+            "LLM returned an empty response. Please verify DASHSCOPE_API_KEY, DASHSCOPE_RESPONSES_URL, and DASHSCOPE_LLM_MODEL."
           );
         }
 

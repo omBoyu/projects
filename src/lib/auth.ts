@@ -7,7 +7,10 @@ const SESSION_COOKIE = "travel_session";
 const ONE_WEEK_SECONDS = 60 * 60 * 24 * 7;
 
 function getAuthSecret(): string {
-  const secret = process.env.AUTH_SECRET ?? process.env.COZE_API_KEY;
+  const secret =
+    process.env.AUTH_SECRET ??
+    process.env.DASHSCOPE_API_KEY ??
+    process.env.COZE_API_KEY;
   if (!secret) {
     throw new Error("AUTH_SECRET is not set");
   }

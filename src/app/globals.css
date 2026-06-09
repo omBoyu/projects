@@ -101,6 +101,37 @@ body {
   @apply font-sans;
 }
 
+.travel-background-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0.7;
+  transform-origin: center;
+  animation-name: travel-path-drift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes travel-path-drift {
+  0% {
+    opacity: 0.28;
+    stroke-dashoffset: 0.7;
+  }
+  50% {
+    opacity: 0.58;
+    stroke-dashoffset: -0.15;
+  }
+  100% {
+    opacity: 0.28;
+    stroke-dashoffset: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .travel-background-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Markdown content styles */
 .markdown-content h2 {
   @apply text-2xl font-serif font-bold mt-8 mb-4 text-travel-teal border-b border-travel-sand/30 pb-2;

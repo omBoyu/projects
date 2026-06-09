@@ -279,13 +279,7 @@ export default function Home() {
   const isAuthView = !initialAuthLoading && !currentUser;
 
   return (
-    <div
-      className={
-        isAuthView
-          ? "min-h-screen bg-[#070A13] text-white"
-          : "min-h-screen bg-[var(--background)]"
-      }
-    >
+    <div className="min-h-screen text-[#2C2C2C]">
       {/* Hero Section */}
       <section
         className={
@@ -294,35 +288,13 @@ export default function Home() {
             : "relative overflow-hidden"
         }
       >
-        {/* Background decoration */}
-        {isAuthView ? (
-          <>
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,#070A13_0%,#0B1D2A_38%,#17122C_70%,#2A1C0B_100%)]" />
-            <div className="absolute inset-0 opacity-35 [background-image:linear-gradient(rgba(74,222,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(212,165,116,0.14)_1px,transparent_1px)] [background-size:42px_42px]" />
-            <div className="absolute inset-0 bg-[linear-gradient(115deg,transparent_0%,rgba(74,222,255,0.18)_26%,transparent_48%,rgba(212,165,116,0.14)_72%,transparent_100%)]" />
-            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/80 to-transparent" />
-          </>
-        ) : (
-          <>
-            <div className="absolute inset-0 bg-gradient-to-br from-[#2D7D7B]/8 via-[#FAF7F2] to-[#D4A574]/10" />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#D4A574]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#2D7D7B]/8 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
-          </>
-        )}
-
-        <div
-          className={
-            isAuthView
-              ? "relative max-w-4xl mx-auto px-6 pt-20 pb-16"
-              : "relative max-w-4xl mx-auto px-6 pt-20 pb-16"
-          }
-        >
+        <div className="relative max-w-4xl mx-auto px-6 pt-20 pb-16">
           {/* Header */}
           <div className="text-center mb-12">
             <div
               className={
                 isAuthView
-                  ? "inline-flex items-center gap-2 border border-cyan-300/30 bg-cyan-300/10 text-cyan-100 px-4 py-1.5 rounded-full text-sm font-medium mb-6 shadow-[0_0_24px_rgba(74,222,255,0.18)]"
+                  ? "inline-flex items-center gap-2 border border-slate-950/10 bg-white/70 text-[#2D7D7B] px-4 py-1.5 rounded-full text-sm font-medium mb-6 shadow-lg shadow-slate-950/5 backdrop-blur-md"
                   : "inline-flex items-center gap-2 bg-[#2D7D7B]/10 text-[#2D7D7B] px-4 py-1.5 rounded-full text-sm font-medium mb-6"
               }
             >
@@ -332,7 +304,7 @@ export default function Home() {
             <h1
               className={
                 isAuthView
-                  ? "font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-white to-[#D4A574] mb-4 leading-tight"
+                  ? "font-serif text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neutral-950 to-neutral-700/80 mb-4 leading-tight"
                   : "font-serif text-4xl md:text-5xl font-bold text-[#D4A574] mb-4 leading-tight"
               }
             >
@@ -343,7 +315,7 @@ export default function Home() {
             <p
               className={
                 isAuthView
-                  ? "text-slate-300 text-lg max-w-xl mx-auto leading-relaxed"
+                  ? "text-[#6B6B6B] text-lg max-w-xl mx-auto leading-relaxed"
                   : "text-[#6B6B6B] text-lg max-w-xl mx-auto leading-relaxed"
               }
             >
@@ -360,16 +332,16 @@ export default function Home() {
               </CardContent>
             </Card>
           ) : !currentUser ? (
-            <Card className="max-w-md mx-auto border-cyan-300/20 shadow-2xl shadow-cyan-500/10 bg-slate-950/70 text-white backdrop-blur-xl">
+            <Card className="max-w-md mx-auto border-black/10 bg-white/85 text-[#2C2C2C] shadow-2xl shadow-slate-950/10 backdrop-blur-xl">
               <CardHeader>
-                <CardTitle className="font-serif text-white flex items-center gap-2">
-                  <UserRound className="w-5 h-5 text-cyan-200" />
+                <CardTitle className="font-serif text-[#2C2C2C] flex items-center gap-2">
+                  <UserRound className="w-5 h-5 text-[#2D7D7B]" />
                   {authMode === "login" ? "登录账号" : "注册账号"}
                 </CardTitle>
               </CardHeader>
               <CardContent className="grid gap-5">
                 <div className="space-y-2">
-                  <Label htmlFor="authUsername" className="text-slate-200">
+                  <Label htmlFor="authUsername" className="text-[#2C2C2C]">
                     用户名
                   </Label>
                   <Input
@@ -378,13 +350,13 @@ export default function Home() {
                     value={authUsername}
                     onChange={(e) => setAuthUsername(e.target.value)}
                     disabled={authLoading}
-                    className="h-11 border-cyan-300/20 bg-white/10 text-white placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
+                    className="h-11 border-[#E5DDD3] bg-white/90 text-[#2C2C2C] placeholder:text-[#6B6B6B]/70 focus-visible:ring-[#2D7D7B]/30"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label
                     htmlFor="authPassword"
-                    className="flex items-center gap-2 text-slate-200"
+                    className="flex items-center gap-2 text-[#2C2C2C]"
                   >
                     <KeyRound className="w-4 h-4 text-[#D4A574]" />
                     密码
@@ -401,11 +373,11 @@ export default function Home() {
                       }
                     }}
                     disabled={authLoading}
-                    className="h-11 border-cyan-300/20 bg-white/10 text-white placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
+                    className="h-11 border-[#E5DDD3] bg-white/90 text-[#2C2C2C] placeholder:text-[#6B6B6B]/70 focus-visible:ring-[#D4A574]/30"
                   />
                 </div>
                 {authError && (
-                  <div className="text-sm text-red-100 bg-red-500/15 border border-red-300/20 rounded-md px-3 py-2">
+                  <div className="text-sm text-red-700 bg-red-50/90 border border-red-200 rounded-md px-3 py-2">
                     {authError}
                   </div>
                 )}
@@ -414,7 +386,7 @@ export default function Home() {
                   disabled={
                     authLoading || !authUsername.trim() || !authPassword
                   }
-                  className="h-11 bg-cyan-300 text-slate-950 hover:bg-cyan-200 shadow-[0_0_28px_rgba(103,232,249,0.22)]"
+                  className="h-11 bg-[#2D7D7B] text-white shadow-lg shadow-[#2D7D7B]/20 hover:bg-[#256B69]"
                 >
                   {authLoading && (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -428,7 +400,7 @@ export default function Home() {
                     setAuthMode(authMode === "login" ? "register" : "login");
                     setAuthError("");
                   }}
-                  className="text-cyan-200 hover:bg-white/10 hover:text-white"
+                  className="text-[#2D7D7B] hover:bg-[#2D7D7B]/10 hover:text-[#256B69]"
                 >
                   {authMode === "login"
                     ? "没有账号？去注册"
@@ -535,7 +507,7 @@ export default function Home() {
 
       {/* History Section */}
       {history.length > 0 && (
-        <section className="max-w-4xl mx-auto px-6 pb-8">
+        <section className="relative z-10 max-w-4xl mx-auto px-6 pb-8">
           <button
             onClick={() => setShowHistory(!showHistory)}
             className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#2D7D7B] transition-colors text-sm font-medium group"
@@ -598,7 +570,7 @@ export default function Home() {
       {hasResult && (
         <section
           ref={resultRef}
-          className="max-w-4xl mx-auto px-6 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700"
+          className="relative z-10 max-w-4xl mx-auto px-6 pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700"
         >
           {/* Destination Tag */}
           <div className="flex items-center gap-3 mb-8">
@@ -667,7 +639,7 @@ export default function Home() {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-[#E5DDD3]/40 py-8 text-center text-sm text-[#6B6B6B]">
+      <footer className="relative z-10 border-t border-[#E5DDD3]/40 bg-white/35 py-8 text-center text-sm text-[#6B6B6B] backdrop-blur-sm">
         <p>AI 旅行攻略助手 · 内容仅供参考，请以实际情况为准</p>
       </footer>
     </div>
