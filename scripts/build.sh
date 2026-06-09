@@ -5,8 +5,12 @@ COZE_WORKSPACE_PATH="${COZE_WORKSPACE_PATH:-$(pwd)}"
 
 cd "${COZE_WORKSPACE_PATH}"
 
-echo "Installing dependencies..."
-pnpm install --prefer-frozen-lockfile --prefer-offline --loglevel debug --reporter=append-only
+if [[ "${VERCEL:-}" == "1" ]]; then
+    echo "Skipping dependency install on Vercel; dependencies are installed before build."
+else
+    echo "Installing dependencies..."
+    pnpm install --prefer-frozen-lockfile --prefer-offline --loglevel debug --reporter=append-only
+fi
 
 echo "Building the Next.js project..."
 pnpm next build
