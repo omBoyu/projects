@@ -299,7 +299,7 @@ export default function Home() {
               }
             >
               <Compass className="w-4 h-4" />
-              AI 智能旅行顾问
+              Real-AI 智能旅行顾问
             </div>
             <h1
               className={
