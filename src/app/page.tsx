@@ -46,6 +46,12 @@ interface TravelRecord {
   created_at: string;
 }
 
+interface AuthRequestBody {
+  username: string;
+  password: string;
+  turnstileToken?: string;
+}
+
 export default function Home() {
   const [destination, setDestination] = useState("");
   const [travelTime, setTravelTime] = useState("");
@@ -125,7 +131,7 @@ export default function Home() {
     setAuthError("");
 
     try {
-      const body: any = {
+      const body: AuthRequestBody = {
         username: authUsername.trim(),
         password: authPassword,
       };
