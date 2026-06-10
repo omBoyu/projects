@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +62,7 @@ export default function Home() {
   const [authError, setAuthError] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
   const [initialAuthLoading, setInitialAuthLoading] = useState(true);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   // History state
   const [history, setHistory] = useState<TravelRecord[]>([]);
@@ -114,18 +116,25 @@ export default function Home() {
 
   const handleAuthSubmit = useCallback(async () => {
     if (!authUsername.trim() || !authPassword) return;
+    if (authMode === "register" && !turnstileToken) {
+      setAuthError("请完成验证码");
+      return;
+    }
 
     setAuthLoading(true);
     setAuthError("");
 
     try {
+      const body: any = {
+        username: authUsername.trim(),
+        password: authPassword,
+      };
+      if (authMode === "register") body.turnstileToken = turnstileToken;
+
       const res = await fetch(`/api/auth/${authMode}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: authUsername.trim(),
-          password: authPassword,
-        }),
+        body: JSON.stringify(body),
       });
       const json = await res.json();
 
@@ -144,7 +153,7 @@ export default function Home() {
     } finally {
       setAuthLoading(false);
     }
-  }, [authMode, authPassword, authUsername]);
+  }, [authMode, authPassword, authUsername, turnstileToken]);
 
   const handleLogout = useCallback(async () => {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -393,12 +402,22 @@ export default function Home() {
                   )}
                   {authMode === "login" ? "登录" : "注册并登录"}
                 </Button>
+                {authMode === "register" && (
+                  <div className="pt-2">
+                    <Turnstile
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+                      onSuccess={(token) => setTurnstileToken(token)}
+                      onError={() => setAuthError("验证码加载失败，请重试")}
+                    />
+                  </div>
+                )}
                 <Button
                   type="button"
                   variant="ghost"
                   onClick={() => {
                     setAuthMode(authMode === "login" ? "register" : "login");
                     setAuthError("");
+                    setTurnstileToken("");
                   }}
                   className="text-[#2D7D7B] hover:bg-[#2D7D7B]/10 hover:text-[#256B69]"
                 >
